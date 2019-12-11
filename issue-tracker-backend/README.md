@@ -9,6 +9,12 @@
 
 ## About Laravel
 
+Client ID: 1
+Client secret: gxjZqe1HbZ2xNAWbuP8YMUHFIoICUezwngGTHqpV
+Password grant client created successfully.
+
+Client ID: 2
+Client secret: 5H7WBwSO3VcnbSvnFUaLBrlgUhauklmN4JdGDo2y
 
 * crear proyecto laravel y vue create issue-tracker-front
 * vue router, vuex, babel, linter

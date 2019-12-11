@@ -25,7 +25,15 @@ class AuthController extends Controller
         ];
 
         $tokenRequest = Request::create('/oauth/token','post', $data);
-        return app()->handle($tokenRequest);
+        $tokenResponse =  app()->handle($tokenRequest);
+        $tokenConent =  json_decode($tokenResponse->content(),true);
+
+        if(!empty($tokenConent['access_token'])){
+            return $tokenResponse;
+        }
+        return response()->json([
+           'message'=>'No tienes permisos'
+        ]);
     }
 
     public  function register(UserRegisterRequest $request){

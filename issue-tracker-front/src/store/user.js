@@ -16,9 +16,14 @@ const actions={
         return new Promise((resolve, reject)=>{ 
           axios.post('http://issue-tracker-backend.test/api/login', payload)
             .then((res)=>{
-                ctx.commit('setLoggedIn', true);
-                localStorage.setItem('token', res.data);
-                resolve(res);
+                if(res.data.access_token){
+                    ctx.commit('setLoggedIn', true);
+                    localStorage.setItem('token', res.data);
+                    resolve(res);
+                }else{
+                    reject(res);
+                }
+
             }).catch((error)=>{
               reject(error);
             })
@@ -43,7 +48,30 @@ const actions={
                 resolve(false)
             }
         })
-    }
+    },
+
+    forgotPassword(ctx, payload){
+        return new Promise((resolve, reject)=>{ 
+            axios.post('http://issue-tracker-backend.test/api/forgot-password', payload)
+              .then((res)=>{
+                resolve(res);
+              }).catch((error)=>{
+                reject(error);
+              })
+          })
+    },
+
+    resetPassword(ctx, payload){
+        return new Promise((resolve, reject)=>{ 
+            axios.post('http://issue-tracker-backend.test/api/reset-password', payload)
+              .then((res)=>{
+                resolve(res);
+              }).catch((error)=>{
+                reject(error);
+              })
+          })
+    },
+
 };
 
 const getters ={
