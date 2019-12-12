@@ -23,21 +23,7 @@
         </v-col>
       </v-row>
     </v-container>
-        <v-snackbar
-      v-model="snackbar.show"
-      :top="top" 
-      :color="color"
-      :right="right"
-    >
-      {{ snackbar.text }}
-      <v-btn
-        color="white"
-        text
-        @click="snackbar.show = false"
-      >
-        Cerrar
-      </v-btn>
-    </v-snackbar>
+
   </div>
 </template>
 <script>
@@ -58,7 +44,8 @@ export default {
   },//data
   methods:{
     ...mapActions({
-      forgotPassword:'user/forgotPassword'
+      forgotPassword:'user/forgotPassword',
+      addNotification: 'application/addNotification'
     }),
     sendForgotPassword(){
       if(this.$refs.forgotPasswordForm.validate()){
@@ -67,23 +54,23 @@ export default {
         }).then((res)=>{
           console.log(res.data);
           if(res.data.message=="Error al enviar correo"){
-            this.snackbar={
+            this.addNotification({
               show: true,
               text: 'Error al enviar correo'
-            };
+            });
             this.color="red";
           }else{
-            this.snackbar={
+            this.addNotification({
               show: true,
-              text: 'Correo enviado'
-            };
-            this.color="success";
+              text: 'Correo enviado',
+              color:'success'
+            });
           }
         }).catch(()=>{
-          this.snackbar={
+          this.addNotification({
             show: true,
             text: 'Error al enviar correo'
-          };
+          });
           this.color="red";
         });
       }

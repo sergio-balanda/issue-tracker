@@ -24,21 +24,7 @@
         </v-col>
       </v-row>
     </v-container>
-    <v-snackbar
-      v-model="snackbar.show"
-      :top="top" 
-      :color="color"
-      :right="right"
-    >
-      {{ snackbar.text }}
-      <v-btn
-        color="white"
-        text
-        @click="snackbar.show = false"
-      >
-        Cerrar
-      </v-btn>
-    </v-snackbar>
+
   </div>
 </template>
 <script>
@@ -61,7 +47,8 @@ export default {
   },//data
   methods:{
     ...mapActions({
-      login: 'user/loginUser'
+      login: 'user/loginUser',
+      addNotification: 'application/addNotification'
     }),
 
     loginUser(){
@@ -69,7 +56,19 @@ export default {
           this.login(this.user)
           //this.$store.dispatch('user/loginUser', this.user)
           .then(()=>{
-            this.$router.push({name: 'dashboard'});
+            this.addNotification({
+              text:'Bienvenido',
+              show:true,
+              color:'success'
+            }).then(()=>{
+              this.$router.push({name: 'dashboard'});
+            });
+          }).catch(()=>{
+            this.addNotification({
+              show:true,
+              text:'Error al iniciar sesion',
+              color:'red'
+            })
           });
       }
     }

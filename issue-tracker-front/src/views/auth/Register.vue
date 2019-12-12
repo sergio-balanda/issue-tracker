@@ -25,26 +25,13 @@
         </v-col>
       </v-row>
     </v-container>
-    <v-snackbar
-      v-model="snackbar.show"
-      :top="top" 
-      :color="color"
-      :right="right"
-    >
-      {{ snackbar.text }}
-      <v-btn
-        color="white"
-        text
-        @click="snackbar.show = false"
-      >
-        Cerrar
-      </v-btn>
-    </v-snackbar>
+
   </div>
 </template>
 
 <script>
 import axios from 'axios';
+import {mapActions} from 'vuex';
 export default {
   data: function() {
     return{
@@ -63,28 +50,35 @@ export default {
     }
   },//data
   methods:{
+    ...mapActions({
+      addNotification: 'application/addNotification'
+    }),
+
     registerUser(){
       if(this.$refs.registerForm.validate()){
 
         axios.post('http://issue-tracker-backend.test/api/register',this.newUser)
           .then((res)=>{
             if(res.data && res.data.success){
-              this.snackbar={
+              this.addNotification({
                 show:true,
                 text: 'Usuario creado',
-              };
-              this.color='success';
-              this.$router.push({
-                name:'login'
-              });
-              //console.log(res);
+                color:'success'
+              }).then(()=>{
+                this.color='success';
+                this.$router.push({
+                  name:'login'
+                });
+                //console.log(res);
+              })
             }
           }).catch(()=>{
-              this.snackbar={
-                show: true,
-                text: 'Error al registrar!!!',
-              };
-              this.color='red';
+
+            this.addNotification({
+              show: true,
+              text: 'Error al registrar!!!',
+              color:'error'
+            });
           });
         //console.log({event, $form: this.$refs.registerForm.validate()});
       }

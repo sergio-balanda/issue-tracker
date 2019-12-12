@@ -25,21 +25,7 @@
         </v-col>
       </v-row>
     </v-container>
-    <v-snackbar
-      v-model="snackbar.show"
-      :top="top" 
-      :color="color"
-      :right="right"
-    >
-      {{ snackbar.text }}
-      <v-btn
-        color="white"
-        text
-        @click="snackbar.show = false"
-      >
-        Cerrar
-      </v-btn>
-    </v-snackbar>
+
   </div>
 </template>
 <script>
@@ -64,7 +50,8 @@ export default {
   },//data
   methods:{
     ...mapActions({
-      resetPassword: 'user/resetPassword'
+      resetPassword: 'user/resetPassword',
+      addNotification: 'application/addNotification'
     }),
 
     sendResetPassword(){
@@ -75,7 +62,13 @@ export default {
           })
           //this.$store.dispatch('user/loginUser', this.user)
           .then(()=>{
-            this.$router.push({name: 'login'});
+            this.addNotification({
+              text:'Contraseña modificada con exito',
+              show: true,
+              color:'success'
+            }).then(()=>{
+              this.$router.push({name: 'login'});
+            });
           });
       }
     }
