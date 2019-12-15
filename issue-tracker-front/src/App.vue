@@ -1,20 +1,7 @@
 <template>
   <v-app>
-    <v-app-bar app color="primary" dark>
-      <div class="d-flex align-center">
-        <v-toolbar-title class="headline text-uppercase">
-          <span>ISSUE</span>
-          <span class="font-weight-light">tracker</span>
-        </v-toolbar-title>
-      </div>
 
-      <v-spacer></v-spacer>
-      <v-btn small @click="logout" v-if="loggedIn">Salir</v-btn>
-    </v-app-bar>
-
-    <v-content>
-      <router-view></router-view>
-    </v-content>
+    <router-view></router-view>
 
     <v-snackbar
       @input="updateNotification($event, index)"
@@ -47,7 +34,11 @@ export default {
 
   },
   created(){
-    this.checkUserState();
+    this.checkUserState().then(()=>{
+      if(this.loggedIn){
+        this.me();
+      }
+    });
   },//created
   computed:{
     ...mapGetters({
@@ -65,25 +56,12 @@ export default {
   }),//data
   methods:{
     ...mapActions({
-      logoutUser: 'user/logoutUser',
       checkUserState: 'user/setLoggedInState',
       removeNotification: 'application/removeNotification',
-      addNotification:'application/addNotification'
+      addNotification:'application/addNotification',
+      me: 'user/me'
     }),
-    logout(){
-      this.logoutUser()
-        .then(()=>{
-          return this.addNotification({
-            show:true,
-            text: 'Logout',
-            color:'success'
-          }).then(()=>{
-            this.$router.push({name: 'login'});
-          });
-        })
-      //this.$store.dispatch('user/logoutUser');
-      //this.$router.push({name: 'login'});
-    },
+
     updateNotification(show, index){
       if(!show){
         this.removeNotification(index);

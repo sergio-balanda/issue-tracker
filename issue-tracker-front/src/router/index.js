@@ -1,10 +1,13 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+import Home from '../views/pages/Home.vue'
 import Register from '../views/auth/Register.vue'
 import Dashboard from '../views/pages/Dashboard.vue'
+import Profile from '../views/pages/Profile.vue'
 import ForgotPassword from '../views/auth/ForgotPassword.vue'
 import ResetPassword from '../views/auth/ResetPassword.vue'
+import AuthLayout from '../views/layouts/AuthLayout.vue'
+import AppLayout from '../views/layouts/AppLayout.vue'
 
 import Middlewares from '../middlewares/'
 
@@ -17,48 +20,70 @@ const routes = [
     component: Home
   },
   {
-    path: '/login',
-    name: 'login',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/auth/Login.vue'),
-    meta: {
-      middleware: [Middlewares.guest]
-    }
+    path: '/',
+    component: AuthLayout,
+    children:[
+      {
+        path: '/login',
+        name: 'login',
+        // route level code-splitting
+        // this generates a separate chunk (about.[hash].js) for this route
+        // which is lazy-loaded when the route is visited.
+        component: () => import(/* webpackChunkName: "about" */ '../views/auth/Login.vue'),
+        meta: {
+          middleware: [Middlewares.guest]
+        }
+      },
+      {
+        path: '/register',
+        name: 'register',
+        component: Register,
+        meta: {
+          middleware: [Middlewares.guest]
+        }
+      }, 
+      {
+        path: '/forgot-password',
+        name: 'forgot-password',
+        component: ForgotPassword,
+        meta: {
+          middleware: [Middlewares.guest]
+        }
+      },  
+      {
+        path: '/reset-password',
+        name: 'reset-password',
+        component: ResetPassword,
+        meta: {
+          middleware: [Middlewares.guest]
+        }
+      },  
+    ]
   },
+
   {
-    path: '/register',
-    name: 'register',
-    component: Register,
-    meta: {
-      middleware: [Middlewares.guest]
-    }
-  },  
-  {
-    path: '/forgot-password',
-    name: 'forgot-password',
-    component: ForgotPassword,
-    meta: {
-      middleware: [Middlewares.guest]
-    }
-  },  
-  {
-    path: '/reset-password',
-    name: 'reset-password',
-    component: ResetPassword,
-    meta: {
-      middleware: [Middlewares.guest]
-    }
-  },  
-  {
-    path: '/dashboard',
-    name: 'dashboard',
-    component: Dashboard,
-    meta: {
-      middleware: [Middlewares.auth]
-    }
-  }
+    path: '/',
+    component: AppLayout,
+    children:[
+      {
+        path: '/dashboard',
+        name: 'dashboard',
+        component: Dashboard,
+        meta: {
+          middleware: [Middlewares.auth]
+        }
+      },
+      {
+        path: '/profile',
+        name: 'profile',
+        component: Profile,
+        meta: {
+          middleware: [Middlewares.auth]
+        }
+      },
+    ]
+  },
+
 ]
 
 const router = new VueRouter({

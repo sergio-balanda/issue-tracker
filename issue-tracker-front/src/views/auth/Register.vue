@@ -30,7 +30,6 @@
 </template>
 
 <script>
-import axios from 'axios';
 import {mapActions} from 'vuex';
 export default {
   data: function() {
@@ -51,13 +50,14 @@ export default {
   },//data
   methods:{
     ...mapActions({
-      addNotification: 'application/addNotification'
+      addNotification: 'application/addNotification',
+      regiser: 'user/registerUser',
     }),
 
     registerUser(){
       if(this.$refs.registerForm.validate()){
 
-        axios.post('http://issue-tracker-backend.test/api/register',this.newUser)
+        this.regiser(this.newUser)
           .then((res)=>{
             if(res.data && res.data.success){
               this.addNotification({
